@@ -1,16 +1,27 @@
 {% extends 'base.html' %}
-
 {% block title %}Article::Detail{% endblock title %}
-
 {% block container %}
 <h2>{{ article.title }}</h2>
 <p>{{ article.created_at }}</p>
 <hr>
 <p>{{ article.content }}</p>
 <hr>
-<a href="{% url 'articles:update' article.pk %}">[수정하기]</a>
-<form action="{% url 'articles:delete' article.pk %}" method="post">
-  {% csrf_token %}
-  <button type="submit">삭제하기</button>
+<a href="{% url 'articles:update' article.pk %}">[Update]</a>
+<form action="{% url 'articles:delete' article.pk %}" method="POST">
+ {% csrf_token %}
+ <button type="submit">Delete</button>
+</form>
+<hr>
+{% for comment in comments %}
+<p>{{ comment.pk }}. {{ comment.content }}</p>
+<form action="{% url 'articles:comments_delete' article.pk comment.pk %}" method="POST">
+ {% csrf_token %}
+ <button type="submit">Comments Delete</button>
+</form>
+{% endfor %}
+<form action="{% url 'articles:comments_create' article.pk %}" method="POST">
+ {% csrf_token %}
+ {{ form.as_p }}
+ <button type="submit">Comments Create</button>
 </form>
 {% endblock container %}
